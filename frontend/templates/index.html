@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="sl">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Termini predstav</title><link rel="stylesheet" href="/static/styles.css"></head>
+  <body>
+    <main class="shell">
+      <header><div><h1>Termini predstav</h1><p>Interni pregled terminov in tehničnih konfliktov.</p></div><button id="refresh">Osveži zdaj</button></header>
+      <section class="filters" aria-label="Filtri"><input id="search" type="search" placeholder="Išči predstavo ali lokacijo"><details id="period-filter" class="show-filter"><summary id="period-label">Vsi datumi</summary><div class="show-options period-options"><label for="period-mode">Prikaži</label><select id="period-mode"><option value="date">Točen datum</option><option value="month">Mesec</option></select><label id="period-input-label" for="period-value">Točen datum</label><input id="period-value" type="date"><button id="period-clear" type="button">Vsi datumi</button></div></details><details id="show-filter" class="show-filter"><summary id="show-filter-label">Vse predstave</summary><div id="show-options" class="show-options" aria-label="Izberi predstave"></div></details><label><input id="conflicts" type="checkbox"> Samo konflikti</label><a href="/export.xlsx">Excel</a><a href="/export.pdf">PDF</a><a href="/audit">Dnevnik sprememb</a></section>
+      <p id="notice" role="status"></p>
+      <section class="content"><div class="table-wrap"><table><thead><tr><th>Datum</th><th>Ura</th><th>Predstava</th><th>Lokacija</th><th>Status</th><th>Rešeno</th></tr></thead><tbody id="events-body"></tbody></table></div><aside><div class="calendar-head"><button id="previous" aria-label="Prejšnji mesec">‹</button><h2 id="calendar-title"></h2><button id="next" aria-label="Naslednji mesec">›</button></div><div class="weekdays"><span>Pon</span><span>Tor</span><span>Sre</span><span>Čet</span><span>Pet</span><span>Sob</span><span>Ned</span></div><div id="calendar" class="calendar"></div><p class="legend"><i class="dot"></i> termin <i class="dot conflict-dot"></i> konflikt</p></aside></section>
+    </main>
+    <dialog id="export-dialog" aria-labelledby="export-title">
+      <form id="export-form">
+        <h2 id="export-title">Izvoz terminov</h2>
+        <label for="export-period">Obdobje</label>
+        <select id="export-period"><option value="all">Vsi meseci</option><option value="month">Izbrani mesec</option></select>
+        <label id="export-month-label" for="export-month" hidden>Mesec</label>
+        <input id="export-month" type="month" hidden>
+        <fieldset><legend>Predstave</legend>
+          <label><input id="export-all-shows" type="checkbox" checked> Vse predstave</label>
+          <div id="export-shows"></div>
+        </fieldset>
+        <p id="export-count" role="status"></p>
+        <div class="export-actions"><button type="button" id="export-cancel">Prekliči</button><button type="submit">Izvozi</button></div>
+      </form>
+    </dialog>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

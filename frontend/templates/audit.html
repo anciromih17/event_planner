@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="sl">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dnevnik sprememb · Termini predstav</title><link rel="stylesheet" href="/static/styles.css"></head>
+  <body>
+    <main class="shell audit-shell">
+      <header><div><a class="back-link" href="/">← Nazaj na termine</a><h1>Dnevnik sprememb</h1><p>Vsaka uspešno zaznana dodana ali odstranjena predstava.</p></div></header>
+      <section class="table-wrap audit-table"><table><thead><tr><th>Zabeleženo</th><th>Sprememba</th><th>Datum dogodka</th><th>Ura</th><th>Predstava</th><th>Lokacija</th><th>Vir</th></tr></thead><tbody>
+        {% for entry in entries %}
+        <tr><td>{{ entry.recorded_at.strftime('%d.%m.%Y %H:%M') }}</td><td><span class="audit-action {{ 'audit-added' if entry.action == 'ADDED' else 'audit-deleted' }}">{{ 'DODANO' if entry.action == 'ADDED' else 'ODSTRANJENO' }}</span></td><td>{{ entry.event_date.strftime('%d.%m.%Y') }}</td><td>{{ entry.event_time.strftime('%H:%M') if entry.event_time else '—' }}</td><td>{{ entry.title }}</td><td>{{ entry.location or '—' }}</td><td>{{ entry.source }}</td></tr>
+        {% else %}
+        <tr><td colspan="7">Dnevnik je še prazen. Zapisi nastanejo ob naslednjem osveževanju.</td></tr>
+        {% endfor %}
+      </tbody></table></section>
+    </main>
+  </body>
+</html>

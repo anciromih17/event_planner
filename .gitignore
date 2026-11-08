@@ -1,0 +1,23 @@
+# Python environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+credentials.json
+token.json
+
+# Local application data
+*.db
+*.sqlite3
+
+# Tooling and operating-system files
+.DS_Store
+.idea/
+.vscode/
+playwright-report/
+test-results/
