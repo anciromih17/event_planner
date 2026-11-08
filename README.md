@@ -48,6 +48,17 @@ Odprite `http://127.0.0.1:8000`. Prvi uvoz sprožite z gumbom **Osveži zdaj**. 
 pytest
 ```
 
+## Deploy na Render
+
+Projekt vsebuje `render.yaml` za plačljivi Render Web Service s trajnim diskom.
+
+1. V Render povežite GitHub in izberite repozitorij `anciromih17/event_planner`.
+2. Ustvarite Blueprint iz datoteke `render.yaml` na veji `main` ali ustvarite Web Service z enakimi nastavitvami: Python, `pip install -r requirements.txt` in `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
+3. V **Environment → Secret Files** dodajte lokalni datoteki `credentials.json` in `token.json` pod enakima imenoma. Nikoli ju ne objavite v Git.
+4. Po prvem zagonu odprite `https://<ime-storitve>.onrender.com` in kliknite **Osveži zdaj**.
+
+Trajni disk uporablja `/var/data/event_planner.db`, zato se termini, dnevnik sprememb in oznake **REŠENO** ohranijo ob ponovnem zagonu oziroma deployu. Brezplačni Render Web Service nima trajnega diska in po 15 minutah neaktivnosti zaspi; po tem izgubi SQLite bazo, dnevni scheduler pa ne teče, dokler se storitev znova ne zažene.
+
 ## API
 
 - `GET /api/events` – opcijski parametri `title`, `event_date`, `conflicts_only`, `search`

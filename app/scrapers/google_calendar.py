@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime
+import os
 
+from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -14,6 +16,8 @@ SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 CALENDAR_ID = "c_8c35c983ddc44404c000f69a3d00f20eb40700434b42bbe106d09cc4bf91c421@group.calendar.google.com"
 
 ALLOWED_TITLE = "ŽBF 2"
+DEFAULT_CREDENTIALS_PATH = "credentials.json"
+DEFAULT_TOKEN_PATH = "token.json"
 
 
 class GoogleCalendarScraper:
@@ -72,22 +76,33 @@ class GoogleCalendarScraper:
         return events
 
     def _get_service(self):
-
         creds = None
+        credentials_path = os.getenv("GOOGLE_CREDENTIALS_PATH", DEFAULT_CREDENTIALS_PATH)
+        token_path = os.getenv("GOOGLE_TOKEN_PATH", DEFAULT_TOKEN_PATH)
 
         try:
-            creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+            creds = Credentials.from_authorized_user_file(token_path, SCOPES)
 
         except Exception:
             pass
 
-        if not creds or not creds.valid:
+        # Render does not have a browser available for the installed-app OAuth
+        # flow. A stored token with a refresh token can renew itself instead.
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
 
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+        if not creds or not creds.valid:
+            if os.getenv("RENDER") == "true":
+                raise RuntimeError(
+                    "Google Calendar needs valid credentials.json and token.json "
+                    "Render Secret Files."
+                )
+
+            flow = InstalledAppFlow.from_client_secrets_file(credentials_path, SCOPES)
 
             creds = flow.run_local_server(port=0)
 
-            with open("token.json", "w") as f:
+            with open(token_path, "w") as f:
                 f.write(creds.to_json())
 
         return build("calendar", "v3", credentials=creds)
